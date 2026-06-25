@@ -9,6 +9,14 @@ export interface Env {
 // Allowed request headers (you can tighten this down later if desired)
 const allowedHeaders = "*";
 
+const USER_AGENTS = [
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+];
+
 export default {
   async fetch(
     request: Request,
@@ -60,8 +68,12 @@ export default {
     // Depending on what you're proxying, you might also want to delete 'host', 'origin', 'referer'
     // Let's strip 'Origin' and 'Referer' to look more like a standard backend request if needed,
     // though leaving them is often okay.
-    // proxyRequest.headers.delete("Origin");
-    // proxyRequest.headers.delete("Referer");
+    proxyRequest.headers.delete("Origin");
+    proxyRequest.headers.delete("Referer");
+
+    // Inject a random User-Agent
+    const randomUserAgent = USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+    proxyRequest.headers.set("User-Agent", randomUserAgent);
 
     try {
       // 4. Fetch the target
