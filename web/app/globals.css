@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #10B981;
+  --color-secondary: #3B82F6;
+  --color-background: #050505;
+  --color-surface: #111111;
+  --color-text-main: #E5E7EB;
+  --color-text-muted: #4B5563;
+
+  --shadow-glow-emerald: 0 0 15px rgba(16, 185, 129, 0.2);
+  --shadow-glow-blue: 0 0 15px rgba(59, 130, 246, 0.2);
+
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  --background: #050505;
+  --foreground: #E5E7EB;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+}
+
+/* Custom Utilities */
+@utility border-glow-emerald {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+@utility border-glow-blue {
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+@utility kinetic-type {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid var(--color-primary);
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--color-primary) }
+}
