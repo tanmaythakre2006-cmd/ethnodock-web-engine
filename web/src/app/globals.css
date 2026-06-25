@@ -2,15 +2,23 @@
 
 :root {
   --background: #050505;
-  --foreground: #00ff41;
-  --terminal-glow: 0 0 10px rgba(0, 255, 65, 0.4);
+  --foreground: #10B981; /* Emerald */
+  --emerald: #10B981;
+  --electric-blue: #3B82F6;
+  --terminal-glow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-emerald: var(--emerald);
+  --color-electric-blue: var(--electric-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-radius: 0 !important; /* NO rounded cards */
 }
 
 body {
@@ -18,6 +26,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-mono), monospace;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* CRT Scanline Effect */
@@ -35,20 +44,28 @@ body::before {
     ),
     linear-gradient(
       90deg,
-      rgba(255, 0, 0, 0.06),
-      rgba(0, 255, 0, 0.02),
-      rgba(0, 0, 255, 0.06)
+      rgba(255, 0, 0, 0.03),
+      rgba(0, 255, 0, 0.01),
+      rgba(0, 0, 255, 0.03)
     );
-  z-index: 2;
+  z-index: 50;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }
 
 @layer utilities {
   .glow-text {
-    text-shadow: var(--terminal-glow);
+    text-shadow: 0 0 5px var(--emerald);
   }
-  .glow-border {
-    box-shadow: var(--terminal-glow);
+  .sieve-border {
+    border: 1px solid rgba(16, 185, 129, 0.3);
   }
+  .sieve-border-blue {
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Custom transitions */
+.ease-in-out-cubic {
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
 }

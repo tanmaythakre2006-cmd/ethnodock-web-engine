@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Search, Loader2, ShieldAlert } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Terminal, Cpu, Network } from "lucide-react";
 
 interface SearchInterfaceProps {
   onSearch: (query: string) => void;
@@ -11,6 +11,7 @@ interface SearchInterfaceProps {
 
 export function SearchInterface({ onSearch, isLoading }: SearchInterfaceProps) {
   const [query, setQuery] = useState("");
+  const shouldReduceMotion = useReducedMotion();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,59 +20,55 @@ export function SearchInterface({ onSearch, isLoading }: SearchInterfaceProps) {
     }
   };
 
+  const cubicEase = [0.645, 0.045, 0.355, 1] as [number, number, number, number];
+
   return (
-    <div className="relative z-20 w-full max-w-2xl mx-auto mt-20">
+    <div className="relative z-30 w-full max-w-xl mx-auto">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-black/60 backdrop-blur-xl border border-green-500/30 p-8 rounded-lg glow-border"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: shouldReduceMotion ? 0 : 0.5,
+          ease: cubicEase
+        }}
+        className="bg-black sieve-border p-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
       >
-        <div className="flex items-center gap-2 mb-6">
-          <ShieldAlert className="text-green-500 w-5 h-5" />
-          <h2 className="text-xs font-bold uppercase tracking-widest text-green-500/80">
-            Secure Entry Point :: Global Matrix Sieve
-          </h2>
+        <div className="flex items-center justify-between mb-4 border-b sieve-border pb-2 opacity-50">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-3 h-3 text-emerald" />
+            <span className="text-[8px] font-bold uppercase tracking-widest text-emerald">Command Matrix v2.0</span>
+          </div>
+          <div className="flex gap-4">
+            <Cpu className="w-3 h-3 text-emerald" />
+            <Network className="w-3 h-3 text-electric-blue" />
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="relative">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="ENTER SEARCH PARAMETERS..."
-            className="w-full bg-green-500/5 border border-green-500/20 rounded p-4 pl-12 text-green-400 placeholder:text-green-900 focus:outline-none focus:border-green-500/50 transition-all font-mono text-sm"
-            autoFocus
-          />
-          <div className="absolute left-4 top-1/2 -translate-y-1/2">
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 text-green-500 animate-spin" />
-            ) : (
-              <Search className="w-5 h-5 text-green-500/40" />
-            )}
+          <div className="flex items-center gap-3">
+            <span className="text-emerald font-bold">{">"}</span>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="INITIALIZE SEARCH SEQUENCE..."
+              className="w-full bg-transparent border-none outline-none text-emerald placeholder:text-emerald/20 font-mono text-sm"
+              autoFocus
+            />
           </div>
 
           <button
             type="submit"
             disabled={isLoading || !query.trim()}
-            className="mt-4 w-full bg-green-500/10 border border-green-500/40 py-2 text-xs font-bold uppercase tracking-[0.2em] text-green-500 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="mt-6 w-full sieve-border-blue bg-electric-blue/5 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-electric-blue hover:bg-electric-blue/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all ease-in-out-cubic duration-0"
           >
-            {isLoading ? "Executing Extraction..." : "Initialize Sieve"}
+            {isLoading ? "ANALYZING MATRIX..." : "EXECUTE SIEVE"}
           </button>
         </form>
 
-        <div className="mt-6 grid grid-cols-3 gap-4 border-t border-green-500/10 pt-6">
-          <div className="text-center">
-            <div className="text-[10px] text-green-500/40 uppercase">Proxy Status</div>
-            <div className="text-[10px] text-green-400 font-bold uppercase">Active</div>
-          </div>
-          <div className="text-center">
-            <div className="text-[10px] text-green-500/40 uppercase">RAG Engine</div>
-            <div className="text-[10px] text-green-400 font-bold uppercase">Gemini-Pro</div>
-          </div>
-          <div className="text-center">
-            <div className="text-[10px] text-green-500/40 uppercase">Budget</div>
-            <div className="text-[10px] text-green-400 font-bold uppercase">$0.00 Fixed</div>
-          </div>
+        <div className="mt-4 flex justify-between text-[6px] font-mono text-emerald/40 uppercase">
+          <span>Core: System 161 Rules Applied</span>
+          <span>Status: Ready</span>
         </div>
       </motion.div>
     </div>

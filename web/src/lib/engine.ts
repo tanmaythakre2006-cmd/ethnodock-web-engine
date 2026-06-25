@@ -1,7 +1,5 @@
 /**
- * executeDarkSieve - Core Data Extraction Engine
- * Routes multiple simultaneous requests through the Cloudflare Worker Proxy.
- * Implements Scatter-Gather with Regex fallbacks and Gemini RAG injection.
+ * executeDarkSieve - Cybernetic Sieve Reasoning Engine
  */
 
 const PROXY_URL = "https://ethnodock-engine.workers.dev";
@@ -13,66 +11,69 @@ interface SieveResult {
   confidence: number;
 }
 
-export async function executeDarkSieve(query: string): Promise<SieveResult[]> {
+/**
+ * localSieve - Regex-based text extraction simulation
+ */
+function localSieve(rawData: string): SieveResult[] {
+  console.log("[ENGINE] Running Local Sieve (Regex Analysis)...");
+  // Simulating finding patterns in raw data
+  return [
+    {
+      id: `local-${Math.random().toString(36).substr(2, 5)}`,
+      methodology: "Pattern: Structural Bioinformatics",
+      source: "Local Cache",
+      confidence: 0.88,
+    },
+    {
+      id: `local-${Math.random().toString(36).substr(2, 5)}`,
+      methodology: "Heuristic: Botanical Phylogeny",
+      source: "Local Cache",
+      confidence: 0.76,
+    }
+  ];
+}
+
+export async function executeDarkSieve(query: string, geminiKey?: string): Promise<SieveResult[]> {
   console.log(`[ENGINE] Initializing Dark Sieve for query: ${query}`);
 
-  // Simulated scatter-gather targets
-  const targets = [
-    "https://example.com/registry/1",
-    "https://example.com/registry/2",
-    "https://example.com/registry/3",
+  // 1. Parallel Scatter (3 parallel fetch calls)
+  const endpoints = [
+    "https://api.example.com/botanical/registry/1",
+    "https://api.example.com/botanical/registry/2",
+    "https://api.example.com/botanical/registry/3",
   ];
 
   try {
-    // 1. Parallel Scatter via Proxy
-    const fetchPromises = targets.map((target) =>
-      fetch(`${PROXY_URL}/?url=${encodeURIComponent(target)}`, {
-        headers: {
-          "x-target-url": target,
-        },
-      }).catch((e) => {
-        console.warn(`[ENGINE] Failed to fetch target ${target}:`, e);
-        return null;
-      })
+    const fetchPromises = endpoints.map((url) =>
+      fetch(`${PROXY_URL}/?url=${encodeURIComponent(url)}`, {
+        headers: { "x-target-url": url },
+      }).then(res => res.text()).catch(() => "EMPTY_REGISTRY_DATA")
     );
 
-    // Wait for all requests (or failures)
-    // In a real scenario, we'd process the responses.
-    await Promise.all(fetchPromises);
+    // Promise.all to aggregate responses
+    const rawResponses = await Promise.all(fetchPromises);
+    const aggregatedRawText = rawResponses.join("\n---\n");
 
-    // 2. Simulated Local Regex Fallback
-    const regexResults: SieveResult[] = [
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        methodology: "Pattern-Match: Structural Linguistics",
-        source: "Local Registry",
-        confidence: 0.85,
-      },
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        methodology: "Heuristic: Phonetic Drift",
-        source: "Local Registry",
-        confidence: 0.72,
-      },
-    ];
+    // 2. Local Sieve Analysis
+    const results = localSieve(aggregatedRawText);
 
-    // 3. Simulated Gemini RAG Injection
-    // If BYOK Gemini Key is available (future), we'd call Gemini here.
-    const ragResults: SieveResult[] = [
-      {
-        id: Math.random().toString(36).substr(2, 9),
-        methodology: "RAG: Cross-Cultural Semantic Sieve",
+    // 3. Gemini RAG Injection (Simulation)
+    if (geminiKey) {
+      console.log("[ENGINE] Context block prepared for RAG injection. Length:", aggregatedRawText.length);
+      results.push({
+        id: "rag-gemini",
+        methodology: "RAG: Cybernetic Genetic Mapping",
         source: "Gemini-Pro",
-        confidence: 0.98,
-      },
-    ];
+        confidence: 0.99,
+      });
+    }
 
-    // Artificial delay to simulate heavy processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Delay to simulate computation density
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    return [...regexResults, ...ragResults];
+    return results;
   } catch (error) {
-    console.error("[ENGINE] Critical failure in Dark Sieve:", error);
+    console.error("[ENGINE] Critical failure in Matrix Sieve:", error);
     throw error;
   }
 }
